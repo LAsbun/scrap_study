@@ -38,6 +38,7 @@ def scrapy_ppt(url=None):
         # print get_cookie.cookies.items()[0][0]
 
         res = requests.post(url = login_url, data=data, headers=header)
+        # print 's'
 
     # 下载ppt
     def download_ppt(url, title):
@@ -46,6 +47,7 @@ def scrapy_ppt(url=None):
         :param title: ppt名
         :return:
         """
+        # print url
         with file(title, 'wb') as f:
             print '-'*10,title,'正在下载'
             f.write(requests.get(url=url, headers=header).content)
@@ -65,22 +67,31 @@ def scrapy_ppt(url=None):
     # print res.content
 
     # 获取资源页面
-    resouce_link = sel.xpath('//div[@class="title"]/a/@href')
+    resouce_link = sel.xpath('//div[@class="title"]/a[1]')[0].get('href', None)
+    # print resouce_link
 
-    resouce_link = resouce_link[0].replace('tool-reset','tool')
+    resouce_link = resouce_link.replace('tool-reset','tool')
 
+    print resouce_link
     # 资源页面
     resouce_page = requests.get(url=resouce_link, headers=header)
 
-    sel = etree.HTML(resouce_page.content)
-    ppt_links = sel.xpath('//td[@headers="title"]/h4/a[@title="PowerPoint"]')
+    # print resouce_page.content
 
-    # print dir(ppt_links[0])
+    sel = etree.HTML(resouce_page.content)
+    ppt_links = sel.xpath('//td[@headers="title"]/h4/a[@title="Power Point"]')
+
+    # print 'ss'
+
+    print len(ppt_links)
     for ppt_link in ppt_links:
+
         title = ppt_link.text.strip()
         link = ppt_link.get('href', None)
+        print link
         if link is None:
             continue
+        print link
         new_thread = threading.Thread(target=download_ppt, args=(link, title))
         new_thread.start()
         # new_thread.join()
@@ -90,9 +101,9 @@ def scrapy_ppt(url=None):
 
 
 # 资源页面url
-url = 'http://elearning.hpu.edu.cn/portal/site/' \
-      '34bf9ec8-dfe4-4094-b6f7-05d89998c22c/page/b75edbbc-f08a-4e06-a8d7-a4e707e7141b'
-
+#url = 'http://elearning.hpu.edu.cn/portal/site/' \
+ #     '34bf9ec8-dfe4-4094-b6f7-05d89998c22c/page/b75edbbc-f08a-4e06-a8d7-a4e707e7141b'
+url = raw_input('请输入要下在的资源业地址: ')
 s1 = time.time()
 # print s1
 scrapy_ppt(url=url)

@@ -53,9 +53,6 @@ def get_content(url):
 def geturl():
 
     url_list = []
-
-
-
     for i in range(1,21):
         url_list.append("http://tieba.baidu.com/p/3522395718?pn=%s" %str(i))
 
