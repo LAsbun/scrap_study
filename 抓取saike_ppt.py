@@ -48,7 +48,7 @@ def scrapy_ppt(url=None):
         """
         with file(title, 'wb') as f:
             print '-'*10,title,'正在下载'
-            f.write(requests.get(url=link, headers=header).content)
+            f.write(requests.get(url=url, headers=header).content)
             print '-'*10,title,'下载完成'
 
     eid = raw_input('请输入学号: ')
